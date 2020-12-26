@@ -11,7 +11,7 @@
     <groupId>com.github.karsl</groupId>
     <artifactId>filmrepository</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>FIlmRepository</name>
+    <name>FilmRepository</name>
     <description>Sample project FilmRepository</description>
 
     <properties>
