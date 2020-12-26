@@ -4,11 +4,6 @@ CREATE TYPE FilmGenre AS ENUM ('Comedy', 'Action', 'Drama', 'Crime');
 
 CREATE TYPE MediaType AS ENUM ('Stream', 'Download');
 
-CREATE TABLE Language
-(
-    Name text PRIMARY KEY
-);
-
 CREATE TABLE Film
 (
     ID          SERIAL PRIMARY KEY,
@@ -22,7 +17,7 @@ CREATE TABLE Film
 CREATE TABLE AvailableLanguage
 (
     FilmID   integer NOT NULL REFERENCES Film (ID),
-    Language text    NOT NULL REFERENCES Language (Name),
+    Language text    NOT NULL,
 
     UNIQUE (FilmID, Language)
 );

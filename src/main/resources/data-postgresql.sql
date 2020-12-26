@@ -16,11 +16,6 @@ VALUES (1, 'Tim Robbins'),
        (7, 'James Caan'),
        (8, 'Richard S. Castellano');
 
-INSERT INTO Language (Name)
-VALUES ('English'),
-       ('Italian'),
-       ('Latin');
-
 INSERT INTO Credit (filmid, actorid, role)
 VALUES (1, 1, 'Andy Dufresne'),
        (1, 2, 'Elis Boyd "Red" Redding'),
