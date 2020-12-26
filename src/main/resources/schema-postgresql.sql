@@ -1,13 +1,12 @@
 CREATE SCHEMA filmrepository;
 
-CREATE TYPE FilmGenre AS ENUM ('Comedy', 'Action');
+CREATE TYPE FilmGenre AS ENUM ('Comedy', 'Action', 'Drama', 'Crime');
 
 CREATE TYPE MediaType AS ENUM ('Stream', 'Download');
 
 CREATE TABLE Language
 (
-    ID   SERIAL PRIMARY KEY,
-    Name text NOT NULL
+    Name text PRIMARY KEY
 );
 
 CREATE TABLE Film
@@ -22,10 +21,10 @@ CREATE TABLE Film
 
 CREATE TABLE AvailableLanguage
 (
-    FilmID     integer NOT NULL REFERENCES Film (ID),
-    LanguageID integer NOT NULL REFERENCES Language (ID),
+    FilmID   integer NOT NULL REFERENCES Film (ID),
+    Language text    NOT NULL REFERENCES Language (Name),
 
-    UNIQUE (FilmID, LanguageID)
+    UNIQUE (FilmID, Language)
 );
 
 CREATE TABLE Actor
