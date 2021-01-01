@@ -1,38 +1,53 @@
 CREATE SCHEMA filmrepository;
 
-CREATE TYPE FilmGenre AS ENUM ('Comedy', 'Action', 'Drama', 'Crime');
-
-CREATE TYPE MediaType AS ENUM ('Stream', 'Download');
-
-CREATE TABLE Film
+CREATE TABLE film_genre
 (
-    ID          SERIAL PRIMARY KEY,
-    Title       text      NOT NULL,
-    Description text,
-    Genre       FilmGenre NOT NULL,
-    Year        smallint  NOT NULL DEFAULT date_part('year', CURRENT_DATE) CHECK ( Year > 0 ),
-    Media       MediaType NOT NULL
+    id   SERIAL PRIMARY KEY,
+    name text NOT NULL UNIQUE
 );
 
-CREATE TABLE AvailableLanguage
+CREATE TABLE media_type
 (
-    FilmID   integer NOT NULL REFERENCES Film (ID),
-    Language text    NOT NULL,
-
-    UNIQUE (FilmID, Language)
+    id   SERIAL PRIMARY KEY,
+    name text NOT NULL UNIQUE
 );
 
-CREATE TABLE Actor
+CREATE TABLE language
 (
-    ID       SERIAL PRIMARY KEY,
-    FullName text NOT NULL
+    id   SERIAL PRIMARY KEY,
+    name text NOT NULL UNIQUE
 );
 
-CREATE TABLE Credit
+CREATE TABLE film
 (
-    FilmID  integer NOT NULL REFERENCES Film (ID),
-    ActorID integer NOT NULL REFERENCES Actor (ID),
-    Role    text    NOT NULL,
+    id          SERIAL PRIMARY KEY,
+    title       text     NOT NULL,
+    description text,
+    genre       int      NOT NULL REFERENCES film_genre (id),
+    year        smallint NOT NULL DEFAULT date_part('year', CURRENT_DATE) CHECK ( year > 0 ),
+    media       int      NOT NULL REFERENCES media_type (id)
+);
 
-    UNIQUE (FilmID, ActorID, Role)
-)
+CREATE TABLE available_language
+(
+    film_id     integer NOT NULL REFERENCES Film (id),
+    language_id integer NOT NULL REFERENCES language (id),
+
+    UNIQUE (film_id, language_id)
+);
+
+CREATE TABLE actor
+(
+    id        SERIAL PRIMARY KEY,
+    full_name text NOT NULL
+);
+
+CREATE TABLE credit
+(
+    film_id  integer NOT NULL REFERENCES Film (id),
+    actor_id integer NOT NULL REFERENCES Actor (id),
+    role     text    NOT NULL,
+
+    UNIQUE (film_id, actor_id, role)
+);
+
