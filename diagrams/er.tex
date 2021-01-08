@@ -11,37 +11,76 @@
 
 \begin{landscape}
   \begin{center}
-    \resizebox{20cm}{!}{%
+    % \resizebox{20cm}{!}{%
     \begin{tikzpicture}[auto,node distance=1.5cm]
       \node[entity] (film) {Film}
-        [grow=up,sibling distance=2.5cm]
-        child[grow=left, level distance=3cm] {node[attribute, minimum width =
-        1cm]
-        {\underline{ID}}} 
-        child {node[attribute] {Title}}
-        child {node[attribute] {Release Year}}
-        child {node[attribute] {Genre}}
-        child {node[attribute] {Description}}
-        child {node[attribute] {Media}}
-        child[grow=right, level distance=3cm] {node[multi attribute] {Language}};
 
-      \node[relationship] (relFilmActor) [below = of film, minimum size=1.5cm]
-      {has}
-      child[grow=right, level distance=2cm] {node[attribute] {Role}};
+      child {node[attribute, right = of film] (year) {Release Year}}
+      child {node[attribute, above = 1cm of year, minimum width = 1cm]
+        (filmId) {\underline{ID}}}
+      child {node[attribute, left = of film] (description) {Description}}
+      child {node[attribute, above = 1cm of description] (title) {Title}};
 
-      \node[rectangle, draw=black, fit=(relFilmActor), inner sep=0em]
-        (relFilmActorSq) {};
 
-      \node[entity] (actor) [below = of relFilmActor] {Actor}
+        \node[relationship] (availablelanguage)
+        [below right = 3cm of film, minimum size=1.5cm]
+      {Available In};
+
+      \node[entity] (language) [below right = of availablelanguage] {Language}
         [grow = down, sibling distance=3cm]
         child {node[attribute, minimum width = 1cm] {\underline{ID}}}
         child {node[attribute] {Full name}};
-                        
-      \path (relFilmActor)
+
+        \path (availablelanguage)
+        edge node {m} (film)
+        edge node {n}(language);
+
+
+
+        \node[relationship] (relFilmMedia) [below = 3cm of film] {Supports};
+
+        \node[entity] [below = of relFilmMedia] (media) {Media Type}
+        [grow = down, sibling distance = 3cm]
+        child {node[attribute, minimum width = 1cm] {\underline{ID}}}
+        child {node[attribute] {Name}};
+
+        \path (relFilmMedia)
+        edge node {m} (film)
+        edge node {1} (media);
+
+
+
+        \node[relationship] (relFilmGenre) [below left = 3cm of film]
+        {Classified as};
+
+        \node[entity] [below left = of relFilmGenre] (genre) {Genre}
+        [grow = down, sibling distance = 3cm]
+        child {node[attribute, minimum width = 1cm] {\underline{ID}}}
+        child {node[attribute] {Name}};
+
+        \path (relFilmGenre)
+        edge node {m} (film)
+        edge node {1} (genre);
+
+
+        \node[relationship] (relFilmActor) [above = of film, minimum size=1.5cm]
+        {Credit}
+        child[grow=left, level distance=2cm] {node[attribute] {Role}};
+
+        \node[rectangle, draw=black, fit=(relFilmActor), inner sep=0em]
+        (relFilmActorSq) {};
+
+        \node[entity] (actor) [above = of relFilmActor] {Actor}
+        [grow = up, sibling distance=3cm]
+        child {node[attribute, minimum width = 1cm] {\underline{ID}}}
+        child {node[attribute] {Full Name}};
+
+        \path (relFilmActor)
         edge node {m} (film)
         edge[total relation] node {n} (actor);
+
     \end{tikzpicture}
-    }
+    % }
   \end{center}
 \end{landscape}
 
