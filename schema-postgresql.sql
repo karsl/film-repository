@@ -39,7 +39,7 @@ CREATE TABLE available_language
 CREATE TABLE actor
 (
     id        SERIAL PRIMARY KEY,
-    full_name text NOT NULL
+    full_name text NOT NULL UNIQUE
 );
 
 CREATE TABLE credit
@@ -50,4 +50,26 @@ CREATE TABLE credit
 
     UNIQUE (film_id, actor_id, role)
 );
+
+CREATE OR REPLACE function check_every_film_has_language()
+    RETURNS TRIGGER
+    LANGUAGE PLPGSQL
+AS
+$$
+BEGIN
+    IF (SELECT count(*) FROM filmrepository.available_language WHERE film_id = new.id) = 0
+    THEN
+        RAISE EXCEPTION 'Can''t insert film with no language';
+    END IF;
+    RETURN NULL;
+END
+$$;
+
+CREATE CONSTRAINT TRIGGER film_language
+    AFTER INSERT OR UPDATE
+    ON film
+    DEFERRABLE INITIALLY DEFERRED
+    FOR EACH ROW
+EXECUTE PROCEDURE check_every_film_has_language();
+
 
