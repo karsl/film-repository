@@ -11,7 +11,6 @@
 
 \begin{landscape}
   \begin{center}
-    % \resizebox{20cm}{!}{%
     \begin{tikzpicture}[auto,node distance=1.5cm]
       \node[entity] (film) {Film}
 
@@ -78,9 +77,30 @@
         \path (relFilmActor)
         edge node {m} (film)
         edge[total relation] node {n} (actor);
-
     \end{tikzpicture}
-    % }
+
+  \pagebreak
+
+  \begin{tikzpicture}[auto,node distance=1.5cm, sibling distance = 3cm]
+    \node[entity] (user) {User}
+    [grow = up]
+    child {node[attribute] {\underline{ID}}}
+    child {node[attribute] {Username}}
+    child {node[attribute] {Password}};
+
+    \node[relationship] (relUserRole) [below = of user, minimum width = 1.5cm,
+    minimum height = 1.5cm] {is};
+
+    \node[entity] (role) [below = of relUserRole] {Role}
+    [grow = down]
+    child {node[attribute] {\underline{ID}}}
+    child {node[attribute] {Name}};
+
+    \path (relUserRole)
+    edge node {m} (user)
+    edge node {1} (role);
+  \end{tikzpicture}
+
   \end{center}
 \end{landscape}
 
