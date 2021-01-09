@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+        crossorigin="anonymous">
+  <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+
+<!-- Modified from here: https://getbootstrap.com/docs/4.0/examples/sign-in/ -->
+<div id="divLogin" class="text-center">
+  <form class="form-signin">
+    <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+    <label for="inputUsername" class="sr-only">Username</label>
+    <input type="text" id="inputUsername" class="form-control" placeholder="Username" required
+           autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <p class="mt-4 mb-3">Or, <a data-toggle="modal" href="#registerModal"
+                                data-taget="#registerModal">register</a>.
+    </p>
+  </form>
+</div>
+
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="registerForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerModalLabel">Register</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Modified from here: https://getbootstrap.com/docs/4.5/components/forms/#horizontal-form -->
+          <div class="form-group row">
+            <label for="inputRegisterUsername" class="col-sm-2 col-form-label">Username</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputRegisterUsername">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputRegisterPassword" class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-10">
+              <input type="password" class="form-control" id="inputRegisterPassword">
+            </div>
+          </div>
+          <fieldset class="form-group">
+            <div class="row">
+              <legend class="col-form-label col-sm-2 pt-0">Role</legend>
+              <div class="col-sm-10">
+                <div class="form-check" th:each="role : ${roles}">
+                  <input class="form-check-input" type="radio" name="roleRadios"
+                         th:id="${'roleRadios' + role.id}"
+                         th:value="${role.id}">
+                  <label class="form-check-label" th:for="${'roleRadios' + role.id}"
+                         th:text="${role.name}"/>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input id="registerFormSubmit" type="button" class="btn btn-success" value="Submit"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+        integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+</body>
+</html>
