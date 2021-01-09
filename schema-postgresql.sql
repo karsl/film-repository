@@ -51,6 +51,20 @@ CREATE TABLE credit
     UNIQUE (film_id, actor_id, role)
 );
 
+CREATE TABLE role
+(
+    id   SERIAL PRIMARY KEY,
+    name text NOT NULL UNIQUE
+);
+
+CREATE TABLE "user"
+(
+    id       SERIAL PRIMARY KEY,
+    username text    NOT NULL UNIQUE,
+    password text    NOT NULL,
+    role     integer NOT NULL REFERENCES role (id)
+);
+
 CREATE OR REPLACE function check_every_film_has_language()
     RETURNS TRIGGER
     LANGUAGE PLPGSQL

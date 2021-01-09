@@ -59,4 +59,16 @@ VALUES (1, 1),
        (2, 2),
        (2, 3);
 
+INSERT INTO role (id, name)
+VALUES (1, 'admin'),
+       (2, 'standard');
+
+SELECT setval('role_id_seq', 2);
+
+INSERT INTO "user" (id, username, password, role)
+VALUES (1, 'username1', 'password1', 2),
+       (2, 'username2', 'password2', 1);
+
+SELECT setval('user_id_seq', 2);
+
 COMMIT;
