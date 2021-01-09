@@ -1,0 +1,19 @@
+body {
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 2em;
+    width: 94%;
+}
+
+#searchContainer {
+    margin-bottom: 1em;
+}
+
+#addNewFilmIcon {
+    margin-right: 0.5em;
+}
+
+.actorNameInput, .actorRoleInput {
+    display: table-cell;
+    width: 100%
+}

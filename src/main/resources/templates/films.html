@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Film Repository</title>
+
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+        crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+        integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
+        crossorigin="anonymous"/>
+  <link rel="stylesheet" th:href="@{/css/films.css}"/>
+
+</head>
+<body>
+
+<!--Ref: https://www.codeply.com/go/cDQQcNY8kP-->
+<div id="searchContainer"
+     class="row no-gutters mt-3 align-items-center d-flex justify-content-center">
+  <div class="col col-md-4">
+    <input class="form-control border-secondary rounded-pill pr-5" type="search"
+           placeholder="Search"
+           id="filmSearch" onkeyup="search()"/>
+  </div>
+  <div class="col-auto">
+    <i class="fa fa-search border-0 rounded-pill ml-n5"></i>
+  </div>
+</div>
+
+<table id="filmTable" class="table table-striped">
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Genre</th>
+    <th onclick="sortTableByYear()">Release Year</th>
+    <th>Media</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <th:block th:each="film : ${films}">
+    <tr th:class="${film.id}" th:id="${'film' + film.id}">
+      <td th:text="${film.title}"></td>
+      <td th:text="${film.description}"></td>
+      <td th:text="${film.genre.name}"></td>
+      <td th:text="${film.year}"></td>
+      <td th:text="${film.media.name}"></td>
+      <td>
+        <button class="btn btn-info" type="button" data-toggle="collapse"
+                th:data-target="${'.collapse' + film.id}">
+          <i class="fas fa-info"></i>
+        </button>
+        <button class="btn btn-warning updateButton" type="button">
+          <i class="fas fa-pen"></i>
+        </button>
+        <button class="btn btn-danger deleteButton" type="button">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+    <tr th:class="${film.id}" th:id="${'credit' + film.id}">
+      <td colspan="6" th:class="${'collapse collapse' + film.id}">
+        <div th:class="${'collapse collapse' + film.id}">
+          <div class="card card-body">
+            <p>
+              Available in languages:
+              <span>
+                                <th:block th:each="language, iterStat : ${film.languages}"
+                                          th:inline="text">
+                                    [[${language.name + (iterStat.last ? '.' : ',')}]]
+                                </th:block>
+                            </span>
+            </p>
+            <ul th:id="${'creditList' + film.id}">
+              <li th:each="credit : ${film.credits}">
+                <span class="actor-name" th:text="${credit.actor.fullName}"/>
+                as
+                <span class="actor-role" th:text="${credit.role}"/>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </th:block>
+  </tbody>
+  <tfoot>
+  <tr>
+    <td colspan="6">
+      <button type="button" class="btn btn-primary btn-lg btn-block" id="showModalButton">
+        <i id="addNewFilmIcon" class="fas fa-plus"></i>
+        New Film
+      </button>
+    </td>
+  </tr>
+  </tfoot>
+</table>
+
+
+<div class="modal fade" id="filmModal" tabindex="-1" aria-labelledby="filmModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog mw-100 w-75">
+    <div class="modal-content">
+      <form id="newFilmForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="filmModalLabel">Add new film</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-column col-md-10">
+              <div class="form-group">
+                <label for="filmTitle">Title</label>
+                <input type="text" class="form-control" id="filmTitle" name="title">
+              </div>
+            </div>
+            <div class="form-column col-md-2">
+              <div class="form-group">
+                <label for="releaseYear" class="form-label">Year</label>
+                <input type="text" class="form-control" id="releaseYear" name="year">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="filmDescription">Description</label>
+            <textarea class="form-control" id="filmDescription" rows="3" name="description">
+            </textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-column col-md-7">
+              <div class="form-group">
+                <label for="filmLanguages">Available in Languages</label>
+                <select multiple class="form-control" id="filmLanguages"
+                        name="languages[]">
+                  <th:block th:each="registeredLanguage : ${registeredLanguages}">
+                    <option th:value="${registeredLanguage.id}"
+                            th:text="${registeredLanguage.name}"/>
+                  </th:block>
+                </select>
+                <small class="text-muted">
+                  You may need to hold CTRL to select multiple languages.
+                </small>
+              </div>
+            </div>
+            <div class="form-column col-md-5">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="filmGenre">Genre</label>
+                  <select class="custom-select" id="filmGenre" name="genre">
+                    <th:block th:each="registeredGenre : ${registeredGenres}">
+                      <option th:value="${registeredGenre.id}" th:text="${registeredGenre.name}"/>
+                    </th:block>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="filmMedia">Media</label>
+                  <div id="filmMedia">
+                    <th:block th:each="supportedMediaType : ${supportedMediaTypes}">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio"
+                               th:id="${'checkbox' + supportedMediaType.id}"
+                               th:value="${supportedMediaType.id}"
+                               name="media">
+                        <label class="form-check-label"
+                               th:for="${'checkbox' + supportedMediaType.id}"
+                               th:text="${supportedMediaType.name}"/>
+                      </div>
+                    </th:block>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="filmCredits">Credits</label>
+            <div id="filmCredits">
+              <table id="creditTable" class="table">
+                <thead>
+                <tr>
+                  <th>Actor/Actress Name</th>
+                  <th>Role</th>
+                  <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                <tr>
+                  <td colspan="3">
+                    <button id="creditAdd" type="button" class="btn btn-primary btn-sm btn-block">
+                      Add Another Credit
+                    </button>
+                  </td>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input id="submitFormButton" type="button" class="btn btn-success" value="Submit"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+        integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+    integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
+    crossorigin="anonymous"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery-serialize-object/2.5.0/jquery.serialize-object.min.js"
+    integrity="sha512-Gn0tSSjkIGAkaZQWjx3Ctl/0dVJuTmjW/f9QyB302kFjU4uTNP4HtA32U2qXs/TRlEsK5CoEqMEMs7LnzLOBsA=="
+    crossorigin="anonymous"></script>
+<script type="text/javascript" th:src="@{/js/films.js}"></script>
+
+</body>
+</html>
