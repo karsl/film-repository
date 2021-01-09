@@ -1,5 +1,6 @@
 package com.github.karsl.filmrepository.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 public class Credit {
 
     @EmbeddedId
+    @JsonIgnore
     private CreditID creditID = new CreditID();
 
     @ManyToOne
