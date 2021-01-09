@@ -60,8 +60,8 @@ VALUES (1, 1),
        (2, 3);
 
 INSERT INTO role (id, name)
-VALUES (1, 'admin'),
-       (2, 'standard');
+VALUES (1, 'Admin'),
+       (2, 'Standard');
 
 SELECT setval('role_id_seq', 2);
 
