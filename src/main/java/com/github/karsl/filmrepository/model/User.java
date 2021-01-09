@@ -9,7 +9,8 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "user")
+// Table name is enclosed with backticks since it's reserved in postgres
+@Table(name = "`user`")
 @Data
 public class User {
 
