@@ -17,7 +17,11 @@
         integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
         crossorigin="anonymous"/>
   <link rel="stylesheet" th:href="@{/css/films.css}"/>
-
+  <style th:inline="text" th:if="${#authorization.expression('!hasRole(''Admin'')')}">
+    .deleteButton {
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
