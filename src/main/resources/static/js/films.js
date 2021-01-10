@@ -1,3 +1,6 @@
+const token = $("meta[name='_csrf']").attr("content");
+const header = $("meta[name='_csrf_header']").attr("content");
+
 // Film table's search functionality.
 function search() {
     let filter = document.getElementById("filmSearch").value.toUpperCase();
@@ -79,6 +82,7 @@ $("#filmTable").on('click', '.deleteButton', (args) => {
 
     $.ajax({
         url: '/films/' + filmId,
+        headers: { [header]: token },
         method: 'DELETE',
         success: () => {
             $('#filmTable .' + filmId).remove();
@@ -161,6 +165,7 @@ $('#submitFormButton').on('click', function (e) {
     if (data['id']) {
         $.ajax({
             url: '/submitForm',
+            headers: { [header]: token },
             contentType: 'application/json',
             data: JSON.stringify(data),
             method: 'PUT',
@@ -185,6 +190,7 @@ $('#submitFormButton').on('click', function (e) {
     else {
         $.ajax({
             url: '/submitForm',
+            headers: { [header]: token },
             contentType: 'application/json',
             data: JSON.stringify(data),
             method: 'POST',
@@ -194,7 +200,6 @@ $('#submitFormButton').on('click', function (e) {
                 $('#filmModal').modal('hide');
             },
             error: (error) => {
-                // Here you can handle exceptions thrown by the server or your controller.
                 console.log(error);
             }
         })
