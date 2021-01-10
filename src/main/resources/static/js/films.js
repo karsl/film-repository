@@ -96,10 +96,10 @@ $("#creditAdd").click(() => {
 
     newRow.innerHTML = `
         <td>
-            <input type="text" class="actorNameInput" placeholder="Name" name="actorName[]"/>
+            <input type="text" class="actorNameInput form-control" placeholder="Name" name="actorName[]"/>
         </td>
         <td>
-            <input type="text" class="actorRoleInput" placeholder="Role" name="actorRole[]"/>
+            <input type="text" class="actorRoleInput form-control" placeholder="Role" name="actorRole[]"/>
         </td>
         <td>
             <button class="btn btn-danger deleteCredit" type="button">
@@ -332,10 +332,10 @@ function bindToForm(film) {
 
         newRow.innerHTML = `
             <td>
-                <input type="text" class="actorNameInput" placeholder="Name" name="actorName[]" value="${actorName}"/>
+                <input type="text" class="actorNameInput form-control" placeholder="Name" name="actorName[]" value="${actorName}"/>
             </td>
             <td>
-                <input type="text" class="actorRoleInput" placeholder="Role" name="actorRole[]" value="${actorRole}"/>
+                <input type="text" class="actorRoleInput form-control" placeholder="Role" name="actorRole[]" value="${actorRole}"/>
             </td>
             <td>
                 <button class="btn btn-danger deleteCredit" type="button">
