@@ -66,8 +66,8 @@ VALUES (1, 'Admin'),
 SELECT setval('role_id_seq', 2);
 
 INSERT INTO "user" (id, username, password, role)
-VALUES (1, 'username1', 'password1', 2),
-       (2, 'username2', 'password2', 1);
+VALUES (1, 'username1', '$2y$12$obe6D1VTly7pCavySPwrLufEWAyxEuctziE28EgyOPOGxkui8QK0q', 2),
+       (2, 'username2', '$2y$12$hVfWbXJ0hHH2q6CV46SjNeEq3D4kAKZ.eFAivD8NzX77yzj2SRtEi', 1);
 
 SELECT setval('user_id_seq', 2);
 
