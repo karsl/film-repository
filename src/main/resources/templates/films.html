@@ -111,9 +111,9 @@
 
 <div class="modal fade" id="filmModal" tabindex="-1" aria-labelledby="filmModalLabel"
      aria-hidden="true">
-  <div class="modal-dialog mw-100 w-75">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form id="newFilmForm">
+      <form id="newFilmForm" class="needs-validation" novalidate>
         <div class="modal-header">
           <h5 class="modal-title" id="filmModalLabel">Add new film</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -125,27 +125,36 @@
             <div class="form-column col-md-10">
               <div class="form-group">
                 <label for="filmTitle">Title</label>
-                <input type="text" class="form-control" id="filmTitle" name="title">
+                <input type="text" class="form-control" id="filmTitle" name="title" required/>
+                <div class="invalid-feedback">
+                  Please provide a title.
+                </div>
               </div>
             </div>
             <div class="form-column col-md-2">
               <div class="form-group">
                 <label for="releaseYear" class="form-label">Year</label>
-                <input type="text" class="form-control" id="releaseYear" name="year">
+                <input type="number" class="form-control" id="releaseYear" name="year" autocomplete="off" required>
+                <div class="invalid-feedback">
+                  Please provide the release year.
+                </div>
               </div>
             </div>
           </div>
           <div class="form-group">
             <label for="filmDescription">Description</label>
-            <textarea class="form-control" id="filmDescription" rows="3" name="description">
+            <textarea class="form-control" id="filmDescription" rows="3" name="description" required>
             </textarea>
+            <div class="invalid-feedback">
+              Please provide a description.
+            </div>
           </div>
           <div class="form-row">
             <div class="form-column col-md-7">
               <div class="form-group">
                 <label for="filmLanguages">Available in Languages</label>
                 <select multiple class="form-control" id="filmLanguages"
-                        name="languages[]">
+                        name="languages[]" required>
                   <th:block th:each="registeredLanguage : ${registeredLanguages}">
                     <option th:value="${registeredLanguage.id}"
                             th:text="${registeredLanguage.name}"/>
@@ -154,17 +163,24 @@
                 <small class="text-muted">
                   You may need to hold CTRL to select multiple languages.
                 </small>
+                <div class="invalid-feedback">
+                  Please select one or many languages.
+                </div>
               </div>
             </div>
             <div class="form-column col-md-5">
               <div class="form-row">
                 <div class="form-group">
                   <label for="filmGenre">Genre</label>
-                  <select class="custom-select" id="filmGenre" name="genre">
+                  <select class="custom-select" id="filmGenre" name="genre" required>
+                    <option selected disabled value="">Pick a genre</option>
                     <th:block th:each="registeredGenre : ${registeredGenres}">
                       <option th:value="${registeredGenre.id}" th:text="${registeredGenre.name}"/>
                     </th:block>
                   </select>
+                  <div class="invalid-feedback">
+                    Please select a genre.
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="filmMedia">Media</label>
@@ -174,12 +190,15 @@
                         <input class="form-check-input" type="radio"
                                th:id="${'checkbox' + supportedMediaType.id}"
                                th:value="${supportedMediaType.id}"
-                               name="media">
+                               name="media" required>
                         <label class="form-check-label"
                                th:for="${'checkbox' + supportedMediaType.id}"
                                th:text="${supportedMediaType.name}"/>
                       </div>
                     </th:block>
+                  </div>
+                  <div class="invalid-feedback">
+                    Please select a media type.
                   </div>
                 </div>
               </div>
@@ -197,6 +216,16 @@
                 </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td>
+                      <input type="text" class="actorNameInput form-control" placeholder="Name" name="actorName[]" required/>
+                    </td>
+                    <td>
+                      <input type="text" class="actorRoleInput form-control" placeholder="Role" name="actorRole[]" required/>
+                    </td>
+                    <td>
+                    </td>
+                  </tr>
                 </tbody>
                 <tfoot>
                 <tr>

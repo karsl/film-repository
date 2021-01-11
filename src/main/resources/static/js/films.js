@@ -96,10 +96,10 @@ $("#creditAdd").click(() => {
 
     newRow.innerHTML = `
         <td>
-            <input type="text" class="actorNameInput form-control" placeholder="Name" name="actorName[]"/>
+            <input type="text" class="actorNameInput form-control" placeholder="Name" name="actorName[]" required/>
         </td>
         <td>
-            <input type="text" class="actorRoleInput form-control" placeholder="Role" name="actorRole[]"/>
+            <input type="text" class="actorRoleInput form-control" placeholder="Role" name="actorRole[]" required/>
         </td>
         <td>
             <button class="btn btn-danger deleteCredit" type="button">
@@ -132,79 +132,90 @@ function addCredit(actorFullName, actorRole) {
 }
 
 // Submit the form and insert a new row to the film table.
-$('#submitFormButton').on('click', function (e) {
+$('#submitFormButton').on('click', (e) => {
     e.preventDefault();
 
-    let serializeOptions = {'encodes': {'number': true}};
+    let form = document.querySelector('#newFilmForm');
 
-    let data = $('#newFilmForm').serializeObject(serializeOptions);
+    if (!form.checkValidity()) {
+        e.stopPropagation();
 
-    if (!('languages' in data)) {
-        data.languages = []
+        form.classList.add('was-validated');
+    } else {
+        // form.classList.remove('was-validated');
+        let serializeOptions = {'encodes': {'number': true}};
+
+        let data = $('#newFilmForm').serializeObject(serializeOptions);
+
+        if (!('languages' in data)) {
+            data.languages = []
+        }
+
+        let id = document.querySelector('#filmModal').getAttribute(
+            'data-filmid');
+        if (id != null) {
+            data['id'] = Number(id);
+        }
+        data['year'] = Number(data['year']);
+        data['languages'] = data['languages'].map(Number);
+        data['genre'] = Number(data['genre']);
+        data['media'] = Number(data['media']);
+
+        data['credits'] = [];
+
+        for (let i = 0; i < data['actorName'].length; i++) {
+            data['credits'].push({
+                'creditName': data['actorName'][i],
+                'creditRole': data['actorRole'][i]
+            });
+        }
+
+        // Update
+        if (data['id']) {
+            $.ajax({
+                url: '/submitForm',
+                headers: {[header]: token},
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                method: 'PUT',
+                success: (response) => {
+                    console.log(response);
+
+                    // Remove the corresponding rows from the table.
+                    [...document.querySelectorAll(
+                        `#filmTable tbody tr[class='${response.id}'`)].forEach(
+                        r => r.remove());
+
+                    addFilmToFilmTable(response);
+
+                    $('#filmModal').modal('hide');
+                },
+                error: (response) => {
+                    console.log(response);
+                }
+            });
+        }
+
+        // Insert
+        else {
+            debugger;
+            $.ajax({
+                url: '/submitForm',
+                headers: {[header]: token},
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                method: 'POST',
+                success: (response) => {
+                    addFilmToFilmTable(response);
+
+                    $('#filmModal').modal('hide');
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            })
+        }
     }
-
-    let id = document.querySelector('#filmModal').getAttribute('data-filmid') ;
-    if (id != null) {
-        data['id'] = Number(id);
-    }
-    data['year'] = Number(data['year']);
-    data['languages'] = data['languages'].map(Number);
-    data['genre'] = Number(data['genre']);
-    data['media'] = Number(data['media']);
-
-    data['credits'] = [];
-
-    for (let i = 0; i < data['actorName'].length; i++) {
-        data['credits'].push({
-            'creditName': data['actorName'][i],
-            'creditRole': data['actorRole'][i]
-        });
-    }
-
-    // Update
-    if (data['id']) {
-        $.ajax({
-            url: '/submitForm',
-            headers: { [header]: token },
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            method: 'PUT',
-            success: (response) => {
-                console.log(response);
-
-                // Remove the corresponding rows from the table.
-                [...document.querySelectorAll(`#filmTable tbody tr[class='${response.id}'`)].forEach(r => r.remove());
-
-                addFilmToFilmTable(response);
-
-                $('#filmModal').modal('hide');
-            },
-            error: (response) => {
-                // TODO
-                console.log(response);
-            }
-        });
-    }
-
-    // Insert
-    else {
-        $.ajax({
-            url: '/submitForm',
-            headers: { [header]: token },
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            method: 'POST',
-            success: (response) => {
-                addFilmToFilmTable(response);
-
-                $('#filmModal').modal('hide');
-            },
-            error: (error) => {
-                console.log(error);
-            }
-        })
-    }
-
 });
 
 function addFilmToFilmTable(film) {
@@ -321,10 +332,33 @@ function bindToForm(film) {
     }
 
     let tbody = modal.querySelector('#filmCredits table tbody');
-    // Clear prior actors
-    tbody.innerHTML = '';
 
-    film.credits.forEach(c => {
+    const [firstActor, ...restActors] = film.credits;
+
+    let firstActorName, firstActorRole;
+
+    if (firstActor) {
+        // First actor part
+        firstActorName = firstActor.actor.name;
+        firstActorRole = firstActor.role;
+    }
+
+    // Clear prior actors
+    tbody.innerHTML = `
+      <tr>
+        <td>
+          <input type="text" class="actorNameInput form-control" placeholder="Name" name="actorName[]" value="${firstActorName ?? ''}" required/>
+        </td>
+        <td>
+          <input type="text" class="actorRoleInput form-control" placeholder="Role" name="actorRole[]" value="${firstActorRole ?? ''}" required/>
+        </td>
+        <td>
+        </td>
+      </tr>
+    `;
+
+    // Rest of actors part.
+    restActors.forEach(c => {
         let actorName = c.actor.name;
         let actorRole = c.role;
 
@@ -370,4 +404,8 @@ $('#showModalButton').click(() => {
     filmModal.removeAttribute('data-filmId');
 
     $('#filmModal').modal('toggle');
+});
+
+$('#filmModal').on('hidden.bs.modal', (e) => {
+    document.querySelector('#newFilmForm').classList.remove('was-validated');
 });
