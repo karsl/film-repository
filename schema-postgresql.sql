@@ -48,7 +48,7 @@ CREATE TABLE credit
     actor_id integer NOT NULL REFERENCES Actor (id),
     role     text    NOT NULL,
 
-    UNIQUE (film_id, actor_id, role)
+    UNIQUE (film_id, actor_id)
 );
 
 CREATE TABLE role
