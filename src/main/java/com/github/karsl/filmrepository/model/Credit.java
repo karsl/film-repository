@@ -9,8 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "credit",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"film_id", "actor_id", "role"}))
+@Table(name = "credit")
 public class Credit {
 
     @EmbeddedId
