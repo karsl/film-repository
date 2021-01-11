@@ -26,6 +26,10 @@
     <p class="mt-4 mb-3">Or, <a data-toggle="modal" href="#registerModal"
                                 data-taget="#registerModal">register</a>.
     </p>
+    <div th:if="${param.error}" class="mt-5 alert alert-danger alert-dismissible fade show">
+      <strong>Error!</strong> Invalid username and password.
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
   </form>
 </div>
 
