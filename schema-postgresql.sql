@@ -3,26 +3,26 @@ CREATE SCHEMA filmrepository;
 CREATE TABLE film_genre
 (
     id   SERIAL PRIMARY KEY,
-    name text NOT NULL UNIQUE
+    name text NOT NULL UNIQUE CHECK ( name <> '' )
 );
 
 CREATE TABLE media_type
 (
     id   SERIAL PRIMARY KEY,
-    name text NOT NULL UNIQUE
+    name text NOT NULL UNIQUE CHECK ( name <> '' )
 );
 
 CREATE TABLE language
 (
     id   SERIAL PRIMARY KEY,
-    name text NOT NULL UNIQUE
+    name text NOT NULL UNIQUE CHECK ( name <> '' )
 );
 
 CREATE TABLE film
 (
     id          SERIAL PRIMARY KEY,
-    title       text     NOT NULL,
-    description text,
+    title       text     NOT NULL CHECK ( title <> '' ),
+    description text CHECK ( description <> '' ),
     genre       int      NOT NULL REFERENCES film_genre (id),
     year        smallint NOT NULL DEFAULT date_part('year', CURRENT_DATE) CHECK ( year > 0 ),
     media       int      NOT NULL REFERENCES media_type (id)
@@ -39,14 +39,14 @@ CREATE TABLE available_language
 CREATE TABLE actor
 (
     id        SERIAL PRIMARY KEY,
-    full_name text NOT NULL UNIQUE
+    full_name text NOT NULL UNIQUE CHECK ( full_name <> '' )
 );
 
 CREATE TABLE credit
 (
     film_id  integer NOT NULL REFERENCES Film (id),
     actor_id integer NOT NULL REFERENCES Actor (id),
-    role     text    NOT NULL,
+    role     text    NOT NULL CHECK ( role <> '' ),
 
     UNIQUE (film_id, actor_id)
 );
@@ -54,14 +54,14 @@ CREATE TABLE credit
 CREATE TABLE role
 (
     id   SERIAL PRIMARY KEY,
-    name text NOT NULL UNIQUE
+    name text NOT NULL UNIQUE CHECK ( name <> '' )
 );
 
 CREATE TABLE "user"
 (
     id       SERIAL PRIMARY KEY,
-    username text    NOT NULL UNIQUE,
-    password text    NOT NULL,
+    username text    NOT NULL UNIQUE CHECK ( username <> '' ),
+    password text    NOT NULL CHECK ( password <> '' ),
     role     integer NOT NULL REFERENCES role (id)
 );
 
