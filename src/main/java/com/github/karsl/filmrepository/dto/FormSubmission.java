@@ -1,4 +1,4 @@
-package com.github.karsl.filmrepository.controller;
+package com.github.karsl.filmrepository.dto;
 
 import com.github.karsl.filmrepository.model.Actor;
 import com.github.karsl.filmrepository.model.Credit;

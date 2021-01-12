@@ -1,6 +1,6 @@
 package com.github.karsl.filmrepository;
 
-import com.github.karsl.filmrepository.controller.FormSubmission;
+import com.github.karsl.filmrepository.dto.FormSubmission;
 import com.github.karsl.filmrepository.model.Credit;
 import com.github.karsl.filmrepository.model.Language;
 import org.junit.jupiter.api.Test;

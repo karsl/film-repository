@@ -1,5 +1,6 @@
 package com.github.karsl.filmrepository.controller;
 
+import com.github.karsl.filmrepository.dto.FormSubmission;
 import com.github.karsl.filmrepository.model.Film;
 import com.github.karsl.filmrepository.model.FilmGenre;
 import com.github.karsl.filmrepository.model.Language;
