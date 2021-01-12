@@ -2,10 +2,17 @@ package com.github.karsl.filmrepository.controller;
 
 import com.github.karsl.filmrepository.model.*;
 import com.github.karsl.filmrepository.service.GeneralService;
+import org.postgresql.util.PSQLException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.RollbackException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,6 +63,14 @@ public class FilmController {
         generalService.updateFilmsCredits(film);
 
         return generalService.saveFilm(film);
+    }
+
+    // The causes of those exceptions are too broad to put in the global exception handler.
+    // Within this controller, they are thrown when multiple actors with same name is submitted.
+    @ExceptionHandler({PSQLException.class, IllegalStateException.class, EntityExistsException.class})
+    @ResponseBody
+    public ResponseEntity<?> handleExceptionSameActorName() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of("Two actors can't have the same name."));
     }
 
 }
