@@ -1,20 +1,19 @@
 package com.github.karsl.filmrepository.model;
 
+import java.io.Serializable;
+import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 @Embeddable
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreditID implements Serializable {
+public class CreditId implements Serializable {
 
-    private Long filmId;
+  private Long filmId;
 
-    private Long actorId;
+  private Long actorId;
 
 }

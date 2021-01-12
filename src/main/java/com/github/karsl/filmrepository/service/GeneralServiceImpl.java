@@ -1,15 +1,25 @@
 package com.github.karsl.filmrepository.service;
 
-import com.github.karsl.filmrepository.model.*;
-import com.github.karsl.filmrepository.repository.*;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.github.karsl.filmrepository.model.Actor;
+import com.github.karsl.filmrepository.model.CreditId;
+import com.github.karsl.filmrepository.model.Film;
+import com.github.karsl.filmrepository.model.FilmGenre;
+import com.github.karsl.filmrepository.model.Language;
+import com.github.karsl.filmrepository.model.MediaType;
+import com.github.karsl.filmrepository.repository.ActorRepository;
+import com.github.karsl.filmrepository.repository.CreditRepository;
+import com.github.karsl.filmrepository.repository.FilmGenreRepository;
+import com.github.karsl.filmrepository.repository.FilmRepository;
+import com.github.karsl.filmrepository.repository.LanguageRepository;
+import com.github.karsl.filmrepository.repository.MediaTypeRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+
 
 @Service
 public class GeneralServiceImpl implements GeneralService {
@@ -94,7 +104,7 @@ public class GeneralServiceImpl implements GeneralService {
   }
 
   @Override
-  public Film mapFieldsWithIDsToObjectsOfFilm(@NonNull Film film) {
+  public Film mapFieldsWithIdsToObjectsOfFilm(@NonNull Film film) {
     film.setCredits(film.getCredits().stream().map(c -> {
       actorRepository.findActorByFullName(c.getActor().getFullName())
           .ifPresent(a -> c.setActor(a));
@@ -122,7 +132,8 @@ public class GeneralServiceImpl implements GeneralService {
 
       actorRepository.findActorByFullName(c.getActor().getFullName())
           .ifPresentOrElse(
-              // If the actor can be found in the database, map the current actor to the actor in the database.
+              // If the actor can be found in the database, map the current actor to the actor
+              // in the database.
               // This is the case for credits whose actor didn't change.
               c::setActor,
               // Otherwise, save the new actor to the database.
@@ -130,7 +141,7 @@ public class GeneralServiceImpl implements GeneralService {
 
       // At this stage, all actors are fetched from database or, if new, saved in database.
       // Therefore we know all actor and film IDs.
-      c.setCreditID(new CreditID(film.getId(), c.getActor().getId()));
+      c.setCreditId(new CreditId(film.getId(), c.getActor().getId()));
 
       return c;
     }).collect(Collectors.toSet()));
