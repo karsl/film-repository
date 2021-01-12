@@ -107,7 +107,7 @@ public class GeneralServiceImpl implements GeneralService {
   public Film mapFieldsWithIdsToObjectsOfFilm(@NonNull Film film) {
     film.setCredits(film.getCredits().stream().map(c -> {
       actorRepository.findActorByFullName(c.getActor().getFullName())
-          .ifPresent(a -> c.setActor(a));
+          .ifPresent(c::setActor);
       return c;
     }).collect(Collectors.toSet()));
 
