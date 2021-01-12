@@ -1,4 +1,4 @@
-package com.github.karsl.filmrepository.security;
+package com.github.karsl.filmrepository.configuration;
 
 import com.github.karsl.filmrepository.service.LoginService;
 import org.springframework.context.annotation.Bean;
