@@ -6,6 +6,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.Year;
 import java.util.Set;
 
@@ -24,9 +26,11 @@ public class Film {
     private Long id;
 
     @Column(name = "title", nullable = false)
+    @NotEmpty(message = "Title can't be empty.")
     private String title;
 
     @Column(name = "description")
+    @NotEmpty(message = "Description can't be empty.")
     private String description;
 
     @ManyToOne
@@ -34,7 +38,7 @@ public class Film {
     private FilmGenre genre;
 
     @Column(name = "year", nullable = false)
-    @Min(0)
+    @Min(value = 0, message = "Release year can't be negative.")
     private Integer year = Year.now().getValue();
 
     @ManyToOne
@@ -47,6 +51,7 @@ public class Film {
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"film_id", "language_id"}))
+    @Size(min = 1)
     private Set<Language> languages;
 
     @OneToMany(mappedBy = "film", cascade = CascadeType.ALL)

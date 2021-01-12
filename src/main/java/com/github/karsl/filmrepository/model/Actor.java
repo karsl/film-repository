@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -20,6 +21,7 @@ public class Actor {
     private Long id;
 
     @Column(name = "full_name", nullable = false)
+    @NotEmpty(message = "Actor/Actress name can't be empty.")
     private String fullName;
 
 }

@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+
 import lombok.Data;
 
 @Entity
@@ -18,9 +20,11 @@ public class User {
   @Column(name = "id", nullable = false)
   public Long id;
 
+  @NotEmpty(message = "Username can't be empty.")
   @Column(name = "username", nullable = false, unique = true)
   public String username;
 
+  @NotEmpty(message = "Password can't be empty.")
   @Column(name = "password", nullable = false)
   public String password;
 

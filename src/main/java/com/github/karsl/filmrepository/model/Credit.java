@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Data
@@ -33,6 +34,7 @@ public class Credit {
     private Actor actor;
 
     @Column(name = "role", nullable = false)
+    @NotEmpty(message = "Role can't be empty.")
     private String role;
 
 }
