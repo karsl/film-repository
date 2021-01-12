@@ -191,14 +191,13 @@ $('#submitFormButton').on('click', (e) => {
                     $('#filmModal').modal('hide');
                 },
                 error: (response) => {
-                    console.log(response);
+                    alertError(response.responseText);
                 }
             });
         }
 
         // Insert
         else {
-            debugger;
             $.ajax({
                 url: '/submitForm',
                 headers: {[header]: token},
@@ -210,8 +209,8 @@ $('#submitFormButton').on('click', (e) => {
 
                     $('#filmModal').modal('hide');
                 },
-                error: (error) => {
-                    console.log(error);
+                error: (response) => {
+                    alertError(response.responseText);
                 }
             })
         }
@@ -408,4 +407,19 @@ $('#showModalButton').click(() => {
 
 $('#filmModal').on('hidden.bs.modal', (e) => {
     document.querySelector('#newFilmForm').classList.remove('was-validated');
+    $('#errorPanel').hide();
 });
+
+// Don't remove the alert from DOM.
+$('#errorPanel').on("close.bs.alert", (e) => {
+    $(e.currentTarget).hide();
+    return false;
+});
+
+function alertError(message) {
+    // The message is an array of messages, i.e. possibly multiple messages, then just pick the first one.
+    const messageToDisplay = JSON.parse(message)[0];
+
+    document.querySelector('#errorText').innerHTML = messageToDisplay;
+    document.querySelector('#errorPanel').style = '';
+}
