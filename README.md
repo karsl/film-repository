@@ -69,7 +69,7 @@ You can use Maven wrapper to run the project.
 
 `./mvnw spring-boot:run`
 
-Then visit 'localhost:8080' with your browser. To login 
+Then visit 'localhost:8080' with your browser. To login
 * as admin, login with username "username2" and password "password2",
 * as standard user, login with username "username1" and password "password1".
 
@@ -86,3 +86,5 @@ Assuming you have `latexmk`, `pdflatex` and required TeX packages installed, jus
 ## Notes
 
 To build and execute OpenJDK has been  used. Web interface has been tested with Chromium 87.
+
+Information about films in the initial data are taken from [IMDb](imdb.com).
