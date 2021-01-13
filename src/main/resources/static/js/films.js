@@ -175,6 +175,10 @@ $('#submitFormButton').on('click', (e) => {
       data.languages = [];
     }
 
+    if (!data['description']) {
+      delete data['description'];
+    }
+
     const id = document.querySelector('#filmModal').getAttribute(
         'data-filmid');
     if (id != null) {
