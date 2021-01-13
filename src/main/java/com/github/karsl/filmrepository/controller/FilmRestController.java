@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * I was not willing to employ REST service for this service, however deletion of a film matches
+ * I was not willing to employ REST service for this project, however deletion of a film matches
  * with REST 'pattern' so deletion functionality is provided via REST controller. Also, maybe in the
  * future I could add a total REST service.
  */
