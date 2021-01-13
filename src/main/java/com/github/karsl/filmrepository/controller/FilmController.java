@@ -42,7 +42,6 @@ public class FilmController {
     model.addAttribute("registeredLanguages", registeredLanguages);
     model.addAttribute("registeredGenres", registeredGenres);
     model.addAttribute("supportedMediaTypes", supportedMediaTypes);
-    model.addAttribute("newFilm", new Film());
 
     return "films";
   }
@@ -57,7 +56,7 @@ public class FilmController {
 
     model.addAttribute("film", savedFilm);
 
-    return "fragments :: film_row";
+    return "fragments/films :: film_row";
   }
 
   @PutMapping("/submitForm")
@@ -71,7 +70,7 @@ public class FilmController {
 
     model.addAttribute("film", updatedFilm);
 
-    return "fragments :: film_row";
+    return "fragments/films :: film_row";
   }
 
   // The causes of those exceptions are too broad to put in the global exception handler.
