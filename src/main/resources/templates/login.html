@@ -23,63 +23,11 @@
     <input type="password" id="inputPassword" class="form-control" placeholder="Password"
            name="password" required>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <p class="mt-4 mb-3">Or, <a data-toggle="modal" href="#registerModal"
-                                data-taget="#registerModal">register</a>.
-    </p>
     <div th:if="${param.error}" class="mt-5 alert alert-danger alert-dismissible fade show">
       <strong>Error!</strong> Invalid username and password.
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
   </form>
-</div>
-
-<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form id="registerForm">
-        <div class="modal-header">
-          <h5 class="modal-title" id="registerModalLabel">Register</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <!-- Modified from here: https://getbootstrap.com/docs/4.5/components/forms/#horizontal-form -->
-          <div class="form-group row">
-            <label for="inputRegisterUsername" class="col-sm-2 col-form-label">Username</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="inputRegisterUsername">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="inputRegisterPassword" class="col-sm-2 col-form-label">Password</label>
-            <div class="col-sm-10">
-              <input type="password" class="form-control" id="inputRegisterPassword">
-            </div>
-          </div>
-          <fieldset class="form-group">
-            <div class="row">
-              <legend class="col-form-label col-sm-2 pt-0">Role</legend>
-              <div class="col-sm-10">
-                <div class="form-check" th:each="role : ${roles}">
-                  <input class="form-check-input" type="radio" name="roleRadios"
-                         th:id="${'roleRadios' + role.id}"
-                         th:value="${role.id}">
-                  <label class="form-check-label" th:for="${'roleRadios' + role.id}"
-                         th:text="${role.name}"/>
-                </div>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <input id="registerFormSubmit" type="button" class="btn btn-success" value="Submit"/>
-        </div>
-      </form>
-    </div>
-  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
