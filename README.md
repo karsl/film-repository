@@ -69,7 +69,9 @@ You can use Maven wrapper to run the project.
 
 `./mvnw spring-boot:run`
 
-Then visit 'localhost:8080' with your browser.
+Then visit 'localhost:8080' with your browser. To login 
+* as admin, login with username "username2" and password "password2",
+* as standard user, login with username "username1" and password "password1".
 
 ## Diagrams
 
