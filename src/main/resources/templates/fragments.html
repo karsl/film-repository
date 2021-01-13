@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<th:block th:fragment="film_row">
+  <tr th:class="${film.id}" th:id="${'film' + film.id}">
+    <td th:text="${film.title}"></td>
+    <td th:text="${film.description}"></td>
+    <td th:text="${film.genre.name}"></td>
+    <td th:text="${film.year}"></td>
+    <td th:text="${film.media.name}"></td>
+    <td>
+      <button class="btn btn-info" type="button" data-toggle="collapse"
+              th:data-target="${'.collapse' + film.id}">
+        <i class="fas fa-info"></i>
+      </button>
+      <button class="btn btn-warning updateButton" type="button">
+        <i class="fas fa-pen"></i>
+      </button>
+      <button class="btn btn-danger deleteButton" type="button">
+        <i class="fas fa-trash"></i>
+      </button>
+    </td>
+  </tr>
+  <tr th:class="${film.id}" th:id="${'credit' + film.id}">
+    <td colspan="6" th:class="${'collapse collapse' + film.id}">
+      <div th:class="${'collapse collapse' + film.id}">
+        <div class="card card-body">
+          <p>
+            Available in languages:
+            <span>
+                                <th:block th:each="language, iterStat : ${film.languages}"
+                                          th:inline="text">
+                                    [[${language.name + (iterStat.last ? '.' : ',')}]]
+                                </th:block>
+                            </span>
+          </p>
+          <ul th:id="${'creditList' + film.id}">
+            <li th:each="credit : ${film.credits}">
+              <span class="actor-name" th:text="${credit.actor.fullName}"/>
+              as
+              <span class="actor-role" th:text="${credit.role}"/>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </td>
+  </tr>
+</th:block>
+
+</body>
+</html>

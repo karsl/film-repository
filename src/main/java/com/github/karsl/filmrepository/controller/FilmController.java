@@ -48,24 +48,30 @@ public class FilmController {
   }
 
   @PostMapping("submitForm")
-  @ResponseBody
-  public Film processForm(@RequestBody FormSubmission formSubmission) {
+  public String processForm(@RequestBody FormSubmission formSubmission, Model model) {
     Film film = formSubmission.mapToFilm();
 
     generalService.mapFieldsWithIdsToObjectsOfFilm(film);
 
-    return generalService.saveFilm(film);
+    Film savedFilm = generalService.saveFilm(film);
+
+    model.addAttribute("film", savedFilm);
+
+    return "fragments :: film_row";
   }
 
   @PutMapping("/submitForm")
-  @ResponseBody
-  public Film processUpdateForm(@RequestBody FormSubmission formSubmission) {
+  public String processUpdateForm(@RequestBody FormSubmission formSubmission, Model model) {
     Film film = formSubmission.mapToFilm();
 
     generalService.mapFieldsWithIdsToObjectsOfFilm(film);
     generalService.updateFilmsCredits(film);
 
-    return generalService.saveFilm(film);
+    Film updatedFilm = generalService.saveFilm(film);
+
+    model.addAttribute("film", updatedFilm);
+
+    return "fragments :: film_row";
   }
 
   // The causes of those exceptions are too broad to put in the global exception handler.

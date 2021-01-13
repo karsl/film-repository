@@ -82,6 +82,26 @@ $('#releaseYear').datepicker({
   minViewMode: 'years',
 });
 
+$('#filmModal').on('hidden.bs.modal', (e) => {
+  document.querySelector('#newFilmForm').classList.remove('was-validated');
+  $('#errorPanel').hide();
+});
+
+// Don't remove the alert from DOM.
+$('#errorPanel').on('close.bs.alert', (e) => {
+  $(e.currentTarget).hide();
+  return false;
+});
+
+function alertError(message) {
+  // The message is an array of messages, i.e. possibly multiple messages, then
+  // just pick the first one.
+  const messageToDisplay = JSON.parse(message)[0];
+
+  document.querySelector('#errorText').innerHTML = messageToDisplay;
+  document.querySelector('#errorPanel').style = '';
+}
+
 // Deleting a film/row from film table.
 $('#filmTable').on('click', '.deleteButton', (args) => {
   const filmId = $(args.currentTarget).closest('tr').attr('class');
@@ -94,6 +114,19 @@ $('#filmTable').on('click', '.deleteButton', (args) => {
       $('#filmTable .' + filmId).remove();
     },
   });
+}).on('click', '.updateButton', (args) => {
+  const filmId = Number($(args.currentTarget).closest('tr').attr('class'));
+
+  const film = mapFilmIdFilmObject(filmId);
+
+  bindToForm(film);
+
+  document.querySelector('#filmModalLabel').innerHTML = 'Update film';
+
+  const filmModal = document.querySelector('#filmModal');
+  filmModal.setAttribute('data-filmid', filmId);
+
+  $('#filmModal').modal('toggle');
 });
 
 // Add a credit row in the form.
@@ -121,23 +154,6 @@ $('#creditAdd').click(() => {
 $('#creditTable').on('click', '.deleteCredit', (args) => {
   $(args.currentTarget).closest('tr').remove();
 });
-
-// TODO Remove this later.
-function addCredit(actorFullName, actorRole) {
-  const li = document.createElement('li');
-
-  const actorNameSpan = document.createElement('span');
-  actorNameSpan.classList.add('actor-name');
-  actorNameSpan.innerHTML = actorFullName;
-
-  const actorRoleSpan = document.createElement('span');
-  actorRoleSpan.classList.add('actor-role');
-  actorRoleSpan.innerHTML = actorRole;
-
-  li.append(actorNameSpan, document.createTextNode(' as '), actorRoleSpan);
-
-  return li;
-}
 
 // Submit the form and insert a new row to the film table.
 $('#submitFormButton').on('click', (e) => {
@@ -187,14 +203,12 @@ $('#submitFormButton').on('click', (e) => {
         data: JSON.stringify(data),
         method: 'PUT',
         success: (response) => {
-          console.log(response);
-
           // Remove the corresponding rows from the table.
           [...document.querySelectorAll(
-              `#filmTable tbody tr[class='${response.id}'`)].forEach(
-              (r) => r.remove());
+              `#filmTable tbody tr[class='${data.id}'`)]
+              .forEach((r) => r.remove());
 
-          addFilmToFilmTable(response);
+          document.querySelector('#filmTable tbody').innerHTML += response;
 
           $('#filmModal').modal('hide');
         },
@@ -202,7 +216,7 @@ $('#submitFormButton').on('click', (e) => {
           alertError(response.responseText);
         },
       });
-      // Update
+      // Insert
     } else {
       $.ajax({
         url: '/submitForm',
@@ -211,8 +225,7 @@ $('#submitFormButton').on('click', (e) => {
         data: JSON.stringify(data),
         method: 'POST',
         success: (response) => {
-          addFilmToFilmTable(response);
-
+          document.querySelector('#filmTable tbody').innerHTML += response;
           $('#filmModal').modal('hide');
         },
         error: (response) => {
@@ -222,60 +235,6 @@ $('#submitFormButton').on('click', (e) => {
     }
   }
 });
-
-function addFilmToFilmTable(film) {
-  const tbody = document.querySelector('#filmTable tbody');
-  const newFilmRow = tbody.insertRow();
-  const newCreditRow = tbody.insertRow();
-
-  newFilmRow.classList.add(film.id);
-  newFilmRow.id = 'film' + film.id;
-  newCreditRow.classList.add(film.id);
-  newCreditRow.id = 'credit' + film.id;
-
-  newFilmRow.innerHTML = `
-                <td>${film.title}</td>
-                <td>${film.description}</td>
-                <td>${film.genre.name}</td>
-                <td>${film.year}</td>
-                <td>${film.media.name}</td>
-                <td>
-                    <button class="btn btn-info" type="button"
-                            data-toggle="collapse"
-                            data-target="${'.collapse' + film.id}">
-                        <i class="fas fa-info"></i>
-                    </button>
-                    <button class="btn btn-warning updateButton" type="button">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="btn btn-danger deleteButton" type="button">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-           `;
-
-  newCreditRow.innerHTML = `
-                <tr class="${film.id}" id="${'credit' + film.id}">
-                    <td colspan="6" class="${'collapse collapse' + film.id}">
-                        <div class="${'collapse collapse' + film.id}">
-                            <div class="card card-body">
-                                <p>
-                                    Available in languages:
-                                    <span>${film.languages.map(
-      (l) => l.name).join(', ') + '.'}</span>
-                                </p>
-                                <ul id="${'creditList' + film.id}"></ul>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `;
-
-  const creditList = document.getElementById('creditList' + film.id);
-
-  film.credits.forEach(
-      (c) => creditList.appendChild(addCredit(c.actor.fullName, c.role)));
-}
 
 function getEmptyFilm() {
   return ({'genre': {}, 'media': {}, 'languages': [], 'credits': []});
@@ -398,21 +357,6 @@ function bindToForm(film) {
   });
 }
 
-$('#filmTable').on('click', '.updateButton', (args) => {
-  const filmId = Number($(args.currentTarget).closest('tr').attr('class'));
-
-  const film = mapFilmIdFilmObject(filmId);
-
-  bindToForm(film);
-
-  document.querySelector('#filmModalLabel').innerHTML = 'Update film';
-
-  const filmModal = document.querySelector('#filmModal');
-  filmModal.setAttribute('data-filmid', filmId);
-
-  $('#filmModal').modal('toggle');
-});
-
 $('#showModalButton').click(() => {
   bindToForm(getEmptyFilm());
 
@@ -424,22 +368,3 @@ $('#showModalButton').click(() => {
   $('#filmModal').modal('toggle');
 });
 
-$('#filmModal').on('hidden.bs.modal', (e) => {
-  document.querySelector('#newFilmForm').classList.remove('was-validated');
-  $('#errorPanel').hide();
-});
-
-// Don't remove the alert from DOM.
-$('#errorPanel').on('close.bs.alert', (e) => {
-  $(e.currentTarget).hide();
-  return false;
-});
-
-function alertError(message) {
-  // The message is an array of messages, i.e. possibly multiple messages, then
-  // just pick the first one.
-  const messageToDisplay = JSON.parse(message)[0];
-
-  document.querySelector('#errorText').innerHTML = messageToDisplay;
-  document.querySelector('#errorPanel').style = '';
-}
