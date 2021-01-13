@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
 
@@ -38,6 +39,7 @@ public class Film {
 
   @Column(name = "title", nullable = false)
   @NotEmpty(message = "Title can't be empty.")
+  @NotNull(message = "Title can't be null.")
   private String title;
 
   @Column(name = "description")
@@ -48,11 +50,13 @@ public class Film {
   private FilmGenre genre;
 
   @Column(name = "year", nullable = false)
+  @NotNull(message = "Release year can't be null.")
   @Min(value = 0, message = "Release year can't be negative.")
   private Integer year = Year.now().getValue();
 
   @ManyToOne
   @JoinColumn(name = "media", nullable = false)
+  @NotNull(message = "Media can't be null.")
   private MediaType media;
 
   @ManyToMany

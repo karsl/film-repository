@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 
@@ -26,6 +27,7 @@ public class Actor {
   private Long id;
 
   @Column(name = "full_name", nullable = false)
+  @NotNull(message = "Actor/Actress name can't be null.")
   @NotEmpty(message = "Actor/Actress name can't be empty.")
   private String fullName;
 

@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -24,6 +25,7 @@ public class Credit {
 
   @ManyToOne
   @MapsId("filmId")
+  @NotNull(message = "Film of a credit can't be null")
   @JoinColumn(name = "film_id", nullable = false)
   // To prevent circular relationship.
   @ToString.Exclude
@@ -32,6 +34,7 @@ public class Credit {
 
   @ManyToOne
   @MapsId("actorId")
+  @NotNull(message = "Actor of a credit can't be null")
   @JoinColumn(name = "actor_id", nullable = false)
   // To prevent circular relationship.
   @ToString.Exclude
@@ -39,6 +42,7 @@ public class Credit {
   private Actor actor;
 
   @Column(name = "role", nullable = false)
+  @NotNull(message = "Role can't be null.")
   @NotEmpty(message = "Role can't be empty.")
   private String role;
 

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -19,6 +20,7 @@ public class Role implements GrantedAuthority {
 
   @Column(name = "name", nullable = false, unique = true)
   @NotEmpty(message = "Name of a role can't be empty.")
+  @NotNull(message = "Name of a role can't be null.")
   public String name;
 
   @Override
