@@ -41,7 +41,6 @@ public class Film {
   private String title;
 
   @Column(name = "description")
-  @NotEmpty(message = "Description can't be empty.")
   private String description;
 
   @ManyToOne

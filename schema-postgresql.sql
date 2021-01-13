@@ -22,7 +22,7 @@ CREATE TABLE film
 (
     id          SERIAL PRIMARY KEY,
     title       text     NOT NULL CHECK ( title <> '' ),
-    description text CHECK ( description <> '' ),
+    description text,
     genre       int      NOT NULL REFERENCES film_genre (id),
     year        smallint NOT NULL DEFAULT date_part('year', CURRENT_DATE) CHECK ( year > 0 ),
     media       int      NOT NULL REFERENCES media_type (id)
